@@ -16,7 +16,7 @@ export class Pauta {
   @CreateDateColumn({
     name: 'data_cadastro',
   })
-  dataCadastro: Date;
+  dataCadastro?: Date;
 
   @Column({
     type: 'timestamp',
