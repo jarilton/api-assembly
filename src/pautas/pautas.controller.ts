@@ -11,8 +11,14 @@ export class PautasController {
   @Post()
   async save(@Body() pauta: CriarPautaResource, @Res() response: Response) {
     const pautaDomain: Pauta = toDomain(pauta);
-    const pautaSalva = await this.service.save(pautaDomain);
+    const result = await this.service.save(pautaDomain);
 
-    return response.status(201).send(pautaSalva);
+    if (result.isError()) {
+      return response.status(409).send({
+        message: result.error.message,
+      });
+    }
+
+    return response.status(201).send(result);
   }
 }
