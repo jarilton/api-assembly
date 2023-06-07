@@ -29,4 +29,16 @@ export class Pauta {
     nullable: true,
   })
   fechamento?: Date;
+
+  obterStatus(): string {
+    if (!this.abertura) {
+      return 'Não aberta';
+    }
+
+    if (!this.fechamento) {
+      return 'Aberta';
+    }
+
+    return 'Fechada';
+  }
 }
