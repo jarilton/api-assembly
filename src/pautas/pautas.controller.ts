@@ -18,13 +18,16 @@ import {
 } from './pautas.resource';
 import { Pauta } from './pauta.entity';
 import { ErrorResponse } from 'src/common/erro.resource';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('pautas')
+@ApiTags('Pautas')
 export class PautasController {
   private readonly logger = new Logger(PautasController.name);
   constructor(private readonly service: PautasService) {}
 
   @Post()
+  @ApiOperation({ description: 'Criar uma nova pauta' })
   async save(@Body() pauta: CriarPautaResource, @Res() response: Response) {
     this.logger.log(`Criando pauta: ${JSON.stringify(pauta)}`);
     const pautaDomain: Pauta = toDomain(pauta);

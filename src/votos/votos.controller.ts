@@ -3,8 +3,10 @@ import { VotosService } from './votos.service';
 import { PautasService } from 'src/pautas/pautas.service';
 import { RegistroVotoResource } from './votos.resource';
 import { Response } from 'express';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('pautas/:id/votos')
+@ApiTags('Votos')
 export class VotosController {
   constructor(
     private readonly votosService: VotosService,
