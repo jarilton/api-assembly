@@ -1,10 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { OpcaoVoto, Votos } from './votos.entity';
 import { AssociadosService } from './associados/associados.service';
 import { Pauta } from 'src/pautas/pauta.entity';
 import { Result } from 'src/common/result';
 import { Associados } from './associados/associados.entity';
+import { HttpError } from 'src/common/httpError';
 
 @Injectable()
 export class VotosService {
@@ -18,9 +19,15 @@ export class VotosService {
     pauta: Pauta,
     cpf: string,
     opcaoVoto: OpcaoVoto,
-  ): Promise<Result<Votos>> {
+  ): Promise<Result<Votos, HttpError>> {
     if (!pauta.isFoiIniciada()) {
-      return new Result(null, new Error('Pauta não foi iniciada'));
+      return new Result(
+        null,
+        new HttpError(
+          'Pauta não foi iniciada',
+          HttpStatus.UNPROCESSABLE_ENTITY,
+        ),
+      );
     }
 
     const associado = await this.associadosService.recuperarOuCadastrar(cpf);
@@ -31,7 +38,10 @@ export class VotosService {
     );
 
     if (votoRegistrado) {
-      return new Result(null, new Error('Voto já registrado'));
+      return new Result(
+        null,
+        new HttpError('Voto já registrado', HttpStatus.CONFLICT),
+      );
     }
 
     const voto = new Votos();

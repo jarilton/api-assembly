@@ -1,7 +1,7 @@
-export class Result<T> {
+export class Result<T, E> {
   constructor(
     public readonly value: T,
-    public readonly error: Error,
+    public readonly error: E,
     public readonly data?: any,
   ) {}
 

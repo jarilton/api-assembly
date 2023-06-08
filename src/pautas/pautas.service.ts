@@ -12,7 +12,7 @@ export class PautasService {
     private readonly pautaRepository: Repository<Pauta>,
   ) {}
 
-  async save(pauta: Pauta): Promise<Result<Pauta>> {
+  async save(pauta: Pauta): Promise<Result<Pauta, Error>> {
     const descricao = pauta.descricao;
 
     const possivelPauta = await this.pautaRepository.findOne({
@@ -20,7 +20,7 @@ export class PautasService {
     });
 
     if (possivelPauta) {
-      return new Result<Pauta>(
+      return new Result(
         null,
         new Error('Já existe uma pauta com essa descrição'),
       );
@@ -28,7 +28,7 @@ export class PautasService {
 
     pauta = await this.pautaRepository.save(pauta);
 
-    return new Result<Pauta>(pauta, null);
+    return new Result(pauta, null);
   }
 
   async findAll(): Promise<Pauta[]> {

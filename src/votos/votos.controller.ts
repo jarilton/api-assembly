@@ -31,6 +31,11 @@ export class VotosController {
       registroVotoResource.opcaoVoto,
     );
 
+    if (result.isError) {
+      const error = result.error;
+      return response.status(error.status).send(error.message);
+    }
+
     return response.status(HttpStatus.ACCEPTED).send();
   }
 }
