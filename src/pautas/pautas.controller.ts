@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Get,
   Param,
+  Logger,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { PautasService } from './pautas.service';
@@ -20,19 +21,23 @@ import { ErrorResponse } from 'src/common/erro.resource';
 
 @Controller('pautas')
 export class PautasController {
+  private readonly logger = new Logger(PautasController.name);
   constructor(private readonly service: PautasService) {}
 
   @Post()
   async save(@Body() pauta: CriarPautaResource, @Res() response: Response) {
+    this.logger.log(`Criando pauta: ${JSON.stringify(pauta)}`);
     const pautaDomain: Pauta = toDomain(pauta);
     const result = await this.service.save(pautaDomain);
 
     if (result.isError()) {
+      this.logger.error(`Erro ao criar pauta: ${result.error.message}`);
       return response
         .status(HttpStatus.CONFLICT)
         .send(new ErrorResponse(result.error.message));
     }
 
+    this.logger.log(`Pauta criada: ${JSON.stringify(result.value)}`);
     return response
       .status(HttpStatus.CREATED)
       .send(toRepresentation(result.value));
