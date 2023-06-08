@@ -17,6 +17,20 @@ export class VotosController {
     @Body() registroVotoResource: RegistroVotoResource,
     @Res() response: Response,
   ) {
+    const pauta = await this.pautasService.findById(idPauta);
+
+    if (!pauta) {
+      return response
+        .status(HttpStatus.NOT_FOUND)
+        .send(new Error('Pauta não encontrada'));
+    }
+
+    const result = await this.votosService.registrarVoto(
+      pauta,
+      registroVotoResource.cpf,
+      registroVotoResource.opcaoVoto,
+    );
+
     return response.status(HttpStatus.ACCEPTED).send();
   }
 }

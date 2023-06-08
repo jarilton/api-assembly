@@ -14,7 +14,7 @@ export class VotosService {
     private readonly associadosService: AssociadosService,
   ) {}
 
-  async registerVoto(
+  async registrarVoto(
     pauta: Pauta,
     cpf: string,
     opcaoVoto: OpcaoVoto,
